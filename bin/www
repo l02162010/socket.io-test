@@ -7,6 +7,7 @@
 var app = require('../app');
 var debug = require('debug')('test:server');
 var http = require('http');
+var socket = require('socket.io')
 
 /**
  * Get port from environment and store in Express.
@@ -20,7 +21,7 @@ app.set('port', port);
  */
 
 var server = http.createServer(app);
-
+var io = socket(server, {});
 /**
  * Listen on provided port, on all network interfaces.
  */
@@ -58,9 +59,9 @@ function onError(error) {
     throw error;
   }
 
-  var bind = typeof port === 'string'
-    ? 'Pipe ' + port
-    : 'Port ' + port;
+  var bind = typeof port === 'string' ?
+    'Pipe ' + port :
+    'Port ' + port;
 
   // handle specific listen errors with friendly messages
   switch (error.code) {
@@ -83,8 +84,17 @@ function onError(error) {
 
 function onListening() {
   var addr = server.address();
-  var bind = typeof addr === 'string'
-    ? 'pipe ' + addr
-    : 'port ' + addr.port;
+  var bind = typeof addr === 'string' ?
+    'pipe ' + addr :
+    'port ' + addr.port;
   debug('Listening on ' + bind);
 }
+
+io.on('connection', function (socket) {
+  socket.on('sendMessage',function(data){
+    console.log("serve監聽到:"+ data);
+    console.log("------------------");
+    io.emit('message',data); 
+    console.log("sever送過去:"+ data);
+  });
+});
