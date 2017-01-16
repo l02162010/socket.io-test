@@ -3,42 +3,83 @@
 
 <head></head>
 <meta charset="UTF-8">
+<meta name="viewport" content="height=device-height, width=device-width, initial-scale=1">
 <title>SOCKET.IO CLIENT</title>
-<script src="https://code.jquery.com/jquery-3.1.1.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
-    crossorigin="anonymous"></script>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.css" />
+<script src="https://code.jquery.com/jquery-3.1.1.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/vue@2.1.8/dist/vue.js" crossorigin="anonymous"></script>
 <script src="/socket.io/socket.io.js"></script>
 <style type="text/css">
+@import url(http://fonts.googleapis.com/earlyaccess/cwtexyen.css);
+    body{
+        background: #3EC483;
+    }
+
     #messages{
-        width: 400px;
-        height: 600px;
+        height: 80vh;
         border: solid;
         border-color: black;
-        margin: 0 auto;
+        font-size: 1.5em;
+        font-family: 'cwTeXYen', sans-serif;
+        margin-top: 3vh;
+       
     }
     #form {
-        width: 400px;
-        height: auto;
+        
+        height: 10vh;
         border: solid;
-        border-color: red;
-        margin: 0 auto;
+        
     }
-    #message{
-        width: 350px;
+    #user{
+        margin-top: 40vh;
+        margin-left: 17vw;
     }
+    #name{padding:5px 15px; border:2px black solid;
+        cursor:pointer;
+        -webkit-border-radius: 5px;
+        border-radius: 5px; }
+
+
 </style>
 <body>
-    <input id="name">
-    <div id="messages"></div>
-    <div id="form">
-        <input id="message"  type="text"><button id="sendButton">送出</button>
+    <div class="container-fluid">
+      <div class="row">
+          <div class="col-xs-12" id="user" >
+          <h1 class="animated infinite bounce" > 輸入暱稱> . 0</h1>    
+          <input id="name" class="" placeholder="暱稱..." required>
+          <button id="sure" class="btn btn-primary btn-sm ">確認</button>    
+          </div>
+          <div class="col-xs-12" id="chat" >
+               <div id="messages"></div>
+               <div id="form" class="form-inline">
+               <input id="message"  type="text" class="form-control" placeholder="請輸入聊天內容...">
+               <span>
+               <button id="sendButton" class="form-control btn btn-primary btn-block">送出</button>
+               </span>
+              </div>
+          </div>
+     </div>  
     </div>
 </body>
 <script>
+   
     var socket = io();
     var messages = $('#messages');
     var messageField = $('#message');
     var sendButton = $('#sendButton');
-    
+    var sureButton =$('#sure');
+    var userfrom = $('#user');
+    var chatfrom = $('#chat');
+
+    chatfrom.hide();
+
+    sureButton.click( function(){
+      userfrom.hide();
+      chatfrom.show();
+    });
+
+
     sendButton.click( function(){
         var name = $('#name').val() || '路人';
         var message = messageField.val();
